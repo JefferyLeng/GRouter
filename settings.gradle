@@ -1,0 +1,1 @@
+include ':app',':minecenter', ':orderbiz', ':grouter_annotation', ':grouter_compiler', ':grouter_api', ':common'

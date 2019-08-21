@@ -1,0 +1,64 @@
+if (isRelease) {
+    apply plugin: 'com.android.library'
+} else {
+    apply plugin: 'com.android.application'
+}
+
+def versionId = rootProject.ext.versionId
+def androidDependencies = rootProject.ext.androidDependencies
+def moudleId = rootProject.ext.moudleId
+
+android {
+    compileSdkVersion versionId.compileSdkVersion
+    buildToolsVersion versionId.buildToolsVersion
+    defaultConfig {
+        if (!isRelease) {
+            applicationId moudleId.minecenter
+        }
+        minSdkVersion versionId.minSdkVersion
+        targetSdkVersion versionId.targetSdkVersion
+        versionCode versionId.versionCode
+        versionName versionId.versionName
+
+        //Build编译成功之后  可以直接通过BuildConfig.isRelease获取到
+        //注意：三个参数 必须是String
+        buildConfigField("boolean", "isRelease", String.valueOf(isRelease))
+
+        // 在gradle文件中配置选项参数值（用于APT传参接收）
+        // 切记：必须写在defaultConfig节点下
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments = [GROUTER_MODULE_NAME: project.getName(), APT_LOCATION_NAME: packageNameForAPT]
+            }
+        }
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    sourceSets {
+        main {
+            if (!isRelease) {
+                //当前是组件化模式
+                manifest.srcFile "src/main/debug/AndroidManifest.xml"
+            } else {
+                manifest.srcFile "src/main/AndroidManifest.xml"
+                java {
+                    //集成化 debug保重的class不合并到dex
+                    exclude '**/debug/**'
+                }
+            }
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    androidDependencies.each { k, v -> implementation v }
+    implementation project(':common')
+    implementation project(':grouter_annotation')
+    annotationProcessor project(':grouter_compiler')
+}

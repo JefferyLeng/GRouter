@@ -1,0 +1,47 @@
+ext {
+    //用于动态切换 moudle/apk打包的flag
+    // false 每个moudle都是apk单独打包  true 集成化打包  业务模块变成moudle打包
+    isRelease = true
+
+    // 包名，用于存放APT生成的类文件
+    packageNameForAPT = "cc.guider.architeature.router.apt"
+
+    //相当于map 对象名和key 可以自定义
+    versionId = [
+            compileSdkVersion : 28,
+            buildToolsVersion : "29.0.0",
+            minSdkVersion     : 19,
+            targetSdkVersion  : 28,
+            versionCode       : 1,
+            versionName       : "1.0"
+    ]
+
+    moudleId = [
+            "mainApp" : "cc.guider.architeature.router",
+            "orderbiz" : "cc.guider.architeature.orderbiz",
+            "minecenter" : "cc.guider.architeature.minecenter"
+    ]
+
+    serverUrl = [
+            "debug"   : "https://11.22.33.44/debug",
+            "pre"   : "https://55.66.77.88/pre",
+            "release" : "https://99.10.11.22/release"
+    ]
+
+    supportLibrary = "28.0.0"
+
+    androidDependencies = [
+            // ${supportLibrary}表示引用一个变量
+            "appcompat"      : "com.android.support:appcompat-v7:${supportLibrary}",
+            "recyclerview"   : "com.android.support:recyclerview-v7:${supportLibrary}",
+            "constraint"     : "com.android.support.constraint:constraint-layout:1.1.3",
+    ]
+
+    thirdLibDepen = [
+            "okhttp3"        : "com.squareup.okhttp3:okhttp:3.10.0",
+            "retrofit"       : "com.squareup.retrofit2:retrofit:2.5.0",
+            "fastjson"       : "com.alibaba:fastjson:1.2.58"
+    ]
+
+
+}
